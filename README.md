@@ -8,7 +8,7 @@ Branch is a super simple addon for Godot to show the current git branch you are 
 
 1. Copy the "addons" folder to your project. 
 2. Enable the plugin in your project settings.
-3. ![Alt text](screenshots/install.png?raw=true "Install")
+3. ![Alt text](screenshots/install.PNG?raw=true "Install")
 
 
 
