@@ -21,6 +21,12 @@ func _exit_tree():
 			remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, branch_button)
 		branch_button.queue_free() 
 
+
+func _notification(what):
+	if what == NOTIFICATION_WM_FOCUS_IN:
+		get_curent_branch()
+
+
 func get_curent_branch() -> void:
 	var output = []
 	OS.execute( 'git', ['rev-parse', "--abbrev-ref", 'HEAD'], true, output )
