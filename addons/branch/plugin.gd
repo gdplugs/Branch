@@ -1,34 +1,25 @@
-tool
+@tool
 extends EditorPlugin
 
-var branch_button
-
-func _ready(): 
-	get_curent_branch()
+var branch_button: Button
 
 func _enter_tree():
 	branch_button = Button.new()
-	branch_button.text = '...'
-	var _err = branch_button.connect("pressed", self, "get_curent_branch")
-	if _err:
-		printerr("Error while connecting to the branch button's pressed signal")
-	else:
-		add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, branch_button)
+	branch_button.text = "..."
+	branch_button.pressed.connect(get_current_branch)
+	add_control_to_container(CONTAINER_TOOLBAR, branch_button)
 
 func _exit_tree():
-	if branch_button:
-		if branch_button.is_inside_tree():
-			remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, branch_button)
-		branch_button.queue_free() 
-
+	if branch_button and branch_button.is_inside_tree():
+		remove_control_from_container(CONTAINER_TOOLBAR, branch_button)
+		branch_button.queue_free()
 
 func _notification(what):
-	if what == NOTIFICATION_WM_FOCUS_IN:
-		get_curent_branch()
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		get_current_branch()
 
-
-func get_curent_branch() -> void:
-	var output = []
-	OS.execute( 'git', ['rev-parse', "--abbrev-ref", 'HEAD'], true, output )
-	if len(output) == 1:
-		branch_button.text = output[0].strip_edges(true, true)
+func get_current_branch() -> void:
+	var output: Array = []
+	var exit_code := OS.execute("git", ["rev-parse", "--abbrev-ref", "HEAD"], output, true)
+	if exit_code == 0 and output.size() == 1:
+		branch_button.text = output[0].strip_edges()
